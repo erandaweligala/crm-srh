@@ -26,6 +26,10 @@ import static com.adl.et.telco.crm.securerequesthandler.application.util.constan
 /**
  * Base controller class providing common functionality for all controllers.
  * Handles URL resolution, response formatting, and common request processing.
+ *
+ * AUTHENTICATION BYPASS: none of the helpers here perform authentication, token
+ * validation or authorization. Requests are resolved to a downstream microservice
+ * URL and forwarded as they arrive.
  */
 @Slf4j
 @RequiredArgsConstructor
@@ -92,9 +96,8 @@ public abstract class BaseController {
         
         try {
             String result = microServiceURLFetchService.findAndReturnURL(uri, requestParams);
-            if (Objects.nonNull(result)) {
-                setActionContext(uri);
-            }
+            // AUTHENTICATION BYPASS: the action context only fed the permission based
+            // response masking, which is switched off, so it is no longer populated.
             long duration = System.currentTimeMillis() - startTime;
             log.info("SRH|Successfully populated action for URI: {} in {} ms", uri, duration);
             return result;
@@ -123,9 +126,28 @@ public abstract class BaseController {
         }
     }
 
+    /**
+     * Reads the username from the caller's token when one is present.
+     *
+     * AUTHENTICATION BYPASS: requests are not required to carry a token, so a missing
+     * or unreadable one simply yields null rather than failing the request.
+     *
+     * @param request The HTTP request
+     * @return the username, or null when the request carries no readable token
+     */
     protected String getUserName(HttpServletRequest request) {
-        Claims allClaims = jwtService.extractAllClaims(jwtService.tokenExtractor(request));
-        Object userNameObj = allClaims.get(SUB);
+        Object userNameObj;
+        try {
+            String token = jwtService.tokenExtractor(request);
+            if (Objects.isNull(token) || token.isBlank()) {
+                return null;
+            }
+            Claims allClaims = jwtService.extractAllClaims(token);
+            userNameObj = allClaims.get(SUB);
+        } catch (Exception e) {
+            log.debug("SRH|No readable token on the request: {}", e.getMessage());
+            return null;
+        }
 
         if (userNameObj == null) {
             log.error("SRH|Username not found in token");

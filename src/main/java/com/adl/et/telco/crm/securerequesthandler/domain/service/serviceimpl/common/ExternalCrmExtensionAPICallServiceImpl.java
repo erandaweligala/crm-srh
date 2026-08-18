@@ -11,6 +11,7 @@ import com.adl.et.telco.crm.securerequesthandler.application.util.exception.Base
 import com.adl.et.telco.crm.securerequesthandler.application.util.exception.ExceptionHandler;
 import com.adl.et.telco.crm.securerequesthandler.application.util.resultenum.DisplayResultCodeEnum;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
@@ -150,7 +151,7 @@ public class ExternalCrmExtensionAPICallServiceImpl implements ExternalCrmExtens
         long startTime = System.nanoTime();
         try {
             validateMultipartFile(multipartFile);
-            String user = jwtService.extractUsername(jwtService.tokenExtractor(httpServletRequest));
+            String user = optionalUserName();
             HttpHeaders headers = createUploadHeaders(user);
             String finalUrl = getFinalURL(url, valueMap);
 
@@ -165,6 +166,29 @@ public class ExternalCrmExtensionAPICallServiceImpl implements ExternalCrmExtens
         if (multipartFile == null || multipartFile.isEmpty()) {
             log.error("SRH|Multipart file is null or empty");
             throw new IllegalArgumentException("Multipart file cannot be null or empty");
+        }
+    }
+
+    /**
+     * Reads the caller's username from the JWT when one happens to be present.
+     *
+     * AUTHENTICATION BYPASS: a request without a token, or with a token that cannot
+     * be parsed, is perfectly valid. In that case this returns null and the request
+     * is forwarded without the user name header instead of being rejected.
+     *
+     * @return the caller's username, or null when the request carries no readable token
+     */
+    private String optionalUserName() {
+        try {
+            String jwtToken = jwtService.tokenExtractor(httpServletRequest);
+            if (Objects.isNull(jwtToken) || jwtToken.isBlank()) {
+                return null;
+            }
+            Claims claims = jwtService.extractAllClaims(jwtToken);
+            return Objects.nonNull(claims) ? claims.getSubject() : null;
+        } catch (Exception e) {
+            log.debug("SRH|No readable token on the request, forwarding without user details: {}", e.getMessage());
+            return null;
         }
     }
 

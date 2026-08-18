@@ -4,6 +4,7 @@ import com.adl.et.telco.crm.securerequesthandler.application.util.exception.Base
 import com.adl.et.telco.crm.securerequesthandler.application.util.exception.ExceptionHandler;
 import com.adl.et.telco.crm.securerequesthandler.application.util.resultenum.DisplayResultCodeEnum;
 import com.adl.et.telco.crm.securerequesthandler.domain.service.serviceimpl.access.JwtService;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -201,8 +202,10 @@ class ExternalAPICallServiceImplTest {
                 "  \"responseData\": {}\n" +
                 "}";
 
+        Claims claims = mock(Claims.class);
+        when(claims.getSubject()).thenReturn("user");
         when(jwtService.tokenExtractor(httpServletRequest)).thenReturn("token");
-        when(jwtService.extractUsername("token")).thenReturn("user");
+        when(jwtService.extractAllClaims("token")).thenReturn(claims);
         when(restTemplate.postForEntity(anyString(), any(), eq(String.class)))
                 .thenReturn(new ResponseEntity<>(expectedResponse, HttpStatus.OK));
 

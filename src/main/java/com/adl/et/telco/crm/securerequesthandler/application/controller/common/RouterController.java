@@ -20,6 +20,10 @@ import java.util.Map;
 /**
  * Controller for handling CRM extension routing requests.
  * Forwards requests to appropriate microservices based on the request path.
+ *
+ * AUTHENTICATION BYPASS: every request that reaches this controller is forwarded to
+ * the resolved microservice without authentication, token validation or any
+ * authorization check. Callers do not need to send a bearer token.
  */
 @Slf4j
 @RestController
