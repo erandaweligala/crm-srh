@@ -17,6 +17,7 @@ import com.adl.et.telco.crm.securerequesthandler.application.util.resultenum.Dis
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -181,7 +182,7 @@ public class ExternalAPICallServiceImpl implements ExternalAPICallService {
         long startTime = System.nanoTime();
         try {
             validateMultipartFile(multipartFile);
-            String user = jwtService.extractUsername(jwtService.tokenExtractor(httpServletRequest));
+            String user = optionalUserName();
             HttpHeaders headers = createUploadHeaders(user);
             String finalUrl = getFinalURL(url, valueMap);
 
@@ -399,9 +400,9 @@ public class ExternalAPICallServiceImpl implements ExternalAPICallService {
             headers.add(Constants.APPLICATION_ID, Constants.DEFAULT_APPLICATION_ID);
         }
 
-        String jwtToken = jwtService.tokenExtractor(httpServletRequest);
-        String userName = jwtService.extractUsername(jwtToken);
-        String uName = jwtService.extractClaimWithType(jwtToken, ServiceConstants.U_NAME, String.class);
+        Claims claims = optionalClaims();
+        String userName = Objects.nonNull(claims) ? claims.getSubject() : null;
+        String uName = Objects.nonNull(claims) ? claims.get(ServiceConstants.U_NAME, String.class) : null;
 
         if (Objects.nonNull(userName)) {
             CommonSouthBoundResponse<UserGroupDto> userGroupDetails = crmUserDetailClient.getUserGroupDetails(userName, String.valueOf(headers.get(Constants.APPLICATION_ID)));
@@ -415,6 +416,36 @@ public class ExternalAPICallServiceImpl implements ExternalAPICallService {
         }
 
         return new HttpEntity<>(request, headers);
+    }
+
+    /**
+     * Reads the claims of the caller's JWT when one happens to be present.
+     *
+     * AUTHENTICATION BYPASS: a request without a token, or with a token that cannot
+     * be parsed, is perfectly valid. In that case this returns null and the request
+     * is forwarded without the user enrichment headers instead of being rejected.
+     *
+     * @return the token claims, or null when the request carries no readable token
+     */
+    private Claims optionalClaims() {
+        try {
+            String jwtToken = jwtService.tokenExtractor(httpServletRequest);
+            if (Objects.isNull(jwtToken) || jwtToken.isBlank()) {
+                return null;
+            }
+            return jwtService.extractAllClaims(jwtToken);
+        } catch (Exception e) {
+            log.debug("{}No readable token on the request, forwarding without user details: {}", LOG_PREFIX, e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * @return the caller's username when a readable token is present, otherwise null
+     */
+    private String optionalUserName() {
+        Claims claims = optionalClaims();
+        return Objects.nonNull(claims) ? claims.getSubject() : null;
     }
 
     private void logExecutionTime(String operation, String url, long startTime) {

@@ -2,6 +2,7 @@ package com.adl.et.telco.crm.securerequesthandler.domain.service.serviceimpl.com
 
 import com.adl.et.telco.crm.securerequesthandler.application.util.exception.ExceptionHandler;
 import com.adl.et.telco.crm.securerequesthandler.domain.service.serviceimpl.access.JwtService;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -169,8 +170,10 @@ class ExternalCrmExtensionAPICallServiceImplTest {
         Map<String, String> params = Map.of("key", "value");
         ResponseEntity<String> mockResponse = new ResponseEntity<>("success", HttpStatus.OK);
 
+        Claims claims = mock(Claims.class);
+        when(claims.getSubject()).thenReturn("user");
         when(jwtService.tokenExtractor(httpServletRequest)).thenReturn("token");
-        when(jwtService.extractUsername("token")).thenReturn("user");
+        when(jwtService.extractAllClaims("token")).thenReturn(claims);
         when(restTemplate.postForEntity(anyString(), any(), eq(String.class)))
                 .thenReturn(mockResponse);
 
