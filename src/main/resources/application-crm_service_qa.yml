@@ -1,0 +1,327 @@
+############################ Server Port Configuration ###############################
+server:
+  port: 31481
+  http:
+    port: 7121
+log:
+  identifierKey: UUID
+  isDebug: true
+info:
+  app:
+    name: crm
+    msName: crm-secure-request-handler
+com:
+  adl:
+    dte:
+      plugins:
+        logging:
+          enabled: false
+          level: DEBUG
+        rolling:
+          policy: time
+        alarming:
+          enabled: false
+        msstat:
+          enabled: false
+#############Access Management Cofig###################################################################
+secret-key: CrMTemp&ecret
+access:
+  token-expire-time-millsec: 90000000
+temp:
+  token-expire-time-millsec: 90000000
+jwt:
+  idle:
+    time:
+      range:
+        sec: 90000
+  refresh:
+    time:
+      range:
+        sec: 90000
+user:
+  inactive:
+    days: 90
+
+##################### Rest template configurations ######################################################
+rest-template:
+  read-time-out: 60000
+  connection-time-out: 60000
+##################### Redis configurations #############################################################
+spring:
+  redis:
+    database: 0
+    host: redis-service.redis.svc.cluster.local
+    port: 80
+    timeout: 60000
+    jedis:
+      pool:
+        max-idle: 8
+        min-idle: 0
+  sleuth:
+    sampler:
+      probability: 1.0
+    web:
+      skip-pattern: (^cleanup.*|.+favicon.*)
+  main:
+    allow-bean-definition-overriding: true
+
+###################### OTP Configurations #############################################
+otp:
+  initiate:
+    data:
+      length: 8
+      useLetter: true
+      useNumber: true
+      allCapital: true
+      transport: SMS
+      validityInSecond: 60
+
+###################### End points #################################################################
+ums:
+  get-attribute-details:
+    url: http://crm-user-management-service-service-service.qa-crm.svc.cluster.local:31020/ums/auth-user/attribute-info
+  get-activity-list: http://crm-user-management-service-service-service.qa-crm.svc.cluster.local:31020/ums/meta/action
+  get-user-names: http://crm-user-management-service-service-service.qa-crm.svc.cluster.local:31020/ums/meta/users
+  user:
+    expired-in-days: 90
+    status:
+      meta-data: http://crm-user-management-service-service-service.qa-crm.svc.cluster.local:31020/ums/user/status/meta-data
+    base-resource-url: http://crm-user-management-service-service-service.qa-crm.svc.cluster.local:31020/ums/user
+    validate-email: http://crm-user-management-service-service-service.qa-crm.svc.cluster.local:31020/ums/user/validate
+  get-basic-info-for-token:
+    url: http://crm-user-management-service-service-service.qa-crm.svc.cluster.local:31020/ums/auth-user/basic-info/{userName}
+  cpq:
+    get-basic-info-for-token:
+      url: http://cpq-admin-services-user-management-service.cpq.svc.cluster.local:31020/ums/auth-user/basic-info/{userName}
+  get-user-details-for-username:
+    url: http://crm-user-management-service-service-service.qa-crm.svc.cluster.local:31020/ums/auth-user/external/user/{userName}
+  permission:
+    base-resource-url: http://crm-user-management-service-service-service.qa-crm.svc.cluster.local:31020/ums/permission
+  role:
+    base-resource-url: http://crm-user-management-service-service-service.qa-crm.svc.cluster.local:31020/ums/role
+    meta-data-url: http://crm-user-management-service-service-service.qa-crm.svc.cluster.local:31020/ums/role/meta-data
+  inactive:
+    days: 90
+  get-user-details-for-email:
+    url: http://crm-user-management-service-service-service.qa-crm.svc.cluster.local:31020/ums/user/get-details-by-email/{email}
+  get-custom-properties:
+    url: http://crm-user-management-service-service-service.qa-crm.svc.cluster.local:31020/ums/custom-properties
+  extension-management:
+    url: http://crm-user-management-service-service-service.qa-crm.svc.cluster.local:31020/ums/extension-management
+  routing-path:
+    url: http://crm-user-management-service-service-service.qa-crm.svc.cluster.local:31020/ums/extension-management/routing-paths
+  get-user-name:
+    url: http://crm-user-management-service-service-service.qa-crm.svc.cluster.local:31020/ums/auth-user/get-username
+adaptor:
+  otp:
+    initiate: http://crm-bss-adapter-service-service.qa-crm.svc.cluster.local:7007/adaptor/otp/initiate
+    validate: http://crm-bss-adapter-service-service.qa-crm.svc.cluster.local:7007/adaptor/otp/validate
+
+self:
+  onboarding:
+    get:
+      customer:
+        vqm:
+          url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/self-onboarding/get-customer
+ofm:
+  trouble-ticket:
+    create:
+      url: http://crm-operational-flow-manager-service.qa-crm.svc.cluster.local:31050/ofm/trouble-ticket/create-ticket
+    update:
+      url: http://crm-operational-flow-manager-service.qa-crm.svc.cluster.local:31050/ofm/update-ticket/{ticketId}
+  mainprofile:
+    update:
+      url: http://crm-operational-flow-manager-service.qa-crm.svc.cluster.local:31050/ofm/customer-profile
+vqm:
+
+  interaction:
+    timeline:
+      url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/interaction
+  mainprofile:
+    account:
+      url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/customer-account/get-account-details-by-msisdn/{msisdn}
+    customerprofile:
+      url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/customer-profile/get-customer/{msisdn}
+    quota:
+      url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/quota/get-quota-info/{msisdn}
+  selfonboarding:
+    getcustomers:
+      url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/self-onboarding/get-customer
+    reject:
+      customer:
+        url: http://crm-operational-flow-manager-service.qa-crm.svc.cluster.local:31050/ofm/self-onboarding/reject-customer
+    accept:
+      customer:
+        url: http://crm-operational-flow-manager-service.qa-crm.svc.cluster.local:31050/ofm/self-onboarding/accept-customer
+    get-customer-by-reference-id:
+      url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/self-onboarding/get-customer/{referenceId}
+  product:
+    details:
+      url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/product/get-product-details/{msisdn}
+  trouble-ticket:
+    view:
+      url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/trouble-ticket/get-tickets
+  connection-overview:
+    url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/connection-overview/get/{msisdn}
+  order-log:
+    details:
+      url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/order-log/get-order-log
+    step-details:
+      url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/order-log/get-order-steps
+
+  simpack:
+    get-all-url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/simpack/getAll
+    update-status-url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/simpack/updateValidity/{simPackId}/{status}
+    update-package-url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/simpack/update-package/{simPackId}/{packageId}
+  orderlog:
+    get-order-steps-url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/order-log/order-steps/{orderId}/{orderitemId}
+    get-order-status-flow-url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/order-log/order-status-flow/{orderId}
+    get-all-url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/simpack/getAll
+    update-status-url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/simpack/updateValidity/{simPackId}/{status}
+    update-package-url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/simpack/update-package/{simPackId}/{status}
+  customer:
+    overview:
+      url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/customer-overview
+
+tmf:
+  product-catalog:
+    product-offering:
+      retrieve-name-id-url: http://product-catalog-product-catalog-management-service-service.product-catalog.svc.cluster.local:31001/tmf-api/productCatalogManagement/v4/productOffering?fields=id,name&category.id=
+bss:
+  get-offering-display-info: http://crm-bss-adapter-service-service.qa-crm.svc.cluster.local:7007/bss/catalog-management/get-catalog-package-display-info/{offeringId}
+  get-all-url: http://crm-bss-adapter-service-service.qa-crm.svc.cluster.local:7007/vqm/simpack-validate/getAll
+  update-status-url: http://crm-bss-adapter-service-service.qa-crm.svc.cluster.local:7007/vqm/simpack-validate/updateValidity/{simPackId}/{status}
+
+
+audit:
+  #get-action-audits: http://localhost:8089/audit/get-action-log
+  get-action-audits: http://crm-audit-service-service.qa-crm.svc.cluster.local:8089/audit/get-action-log
+  send-audits: http://crm-audit-service-service.qa-crm.svc.cluster.local:8089/audit/create-update-log
+
+############# Rabbit MQ Config###################################################################
+rabbit:
+  exchange-name: audit.exchange
+  queue-name: audit.queue-qa
+  routing-key: audit-routing-key
+  #user-name: guest
+  #user-password: guest
+  #host-name: localhost
+  user-name: admin
+  user-password: adlrabbitmq
+  host-name: abdb74d205ad54622a38dcdcb4bb1f47-2002768854.ap-southeast-1.elb.amazonaws.com
+  port: 5672
+
+tenant-id: 1
+
+
+#############Access Management Config###################################################################
+assisted-channel.secret-key: UM$CRMTemp$ecret
+access.token-expire-time-millsec: 3600000
+#refresh should done before #s before token exp time
+jwt.refresh.time.range.sec: 30
+#Time where access token remains in redis
+jwt.idle.time.range.sec: 1200
+#TTL of temp token
+temp.token.ttl.sec: 120
+prefix.ac: CRM_LOGGEDUSER_QA_
+prefix.temp: CRM_TEMPTOKEN_QA_
+
+base-url:
+  context: /
+
+
+################## SAML responses #########################################################################
+#login.success.url: http://aa2f5992a6e5c46ecbd955e17d8737d9-1297779673.ap-southeast-1.elb.amazonaws.com/crm-new-frontend/internal/success/
+login.success.url: http://aa2f5992a6e5c46ecbd955e17d8737d9-1297779673.ap-southeast-1.elb.amazonaws.com/crm-crm-main-frontend/internal/success/
+login.fail.url: http://aa2f5992a6e5c46ecbd955e17d8737d9-1297779673.ap-southeast-1.elb.amazonaws.com/crm-new-frontend/internal/error/
+login.revoked.url: http://aa2f5992a6e5c46ecbd955e17d8737d9-1297779673.ap-southeast-1.elb.amazonaws.com/crm-new-frontend/internal/access-revoked/
+#saml.public-key-certificate.path: src/main/resources/crm-dev.cer
+saml.public-key-certificate.path: crm-qa-new.cer
+assistedChanel.ums.cred.url: http://crm-user-management-service-service-service.qa-crm.svc.cluster.local:31020/user-details/credentials/user/{userName}
+assistedChanel.ums.basic-info.url: http://crm-user-management-service-service-service.qa-crm.svc.cluster.local:31020/user-details/basic-info/user/{userName}
+saml.request.requestId.cache.time.sec: 120 #2min
+saml.request.redirection.url: https://login.microsoftonline.com/{tenantId}/saml2?SAMLRequest={uriEncode}
+#azure.ad.tenant-id: b1e2520e-d0f0-42e9-a703-33edced2b04f
+azure.ad.tenant-id: ca53df44-d921-4546-981d-d31b144244b2
+saml.request.issuer.url: https://localhost-qa:7008/crm-crm-secure-request-handler/srh
+#saml.request.issuer.url: 26111bd9-98d5-4c63-883d-878dad0cdfd3
+
+cookie.max-age.sec: 604800
+
+################## Management Configs #########################################################################
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,loggers
+  health:
+    probes:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+    loggers:
+      enabled: true
+server.error.include-stacktrace: always
+
+vqm.ticket-summary.url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/home/ticket-summary
+
+vqm-customer-order-url : http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/customer-profile/order
+
+vqm-order-status-flow-url : http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/customer-profile/orders/order-status-flow/{orderId}
+
+vqm-order-status-url : http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/customer-profile/orders/order-steps/{orderId}/{itemId}
+
+
+ofm-todolist-create-task-url : http://crm-operational-flow-manager-service.qa-crm.svc.cluster.local:31050/ofm/home/to-do
+
+ofm-todolist-update-task-url : http://crm-operational-flow-manager-service.qa-crm.svc.cluster.local:31050/ofm/home/to-do
+
+ofm-todolist-delete-task-url : http://crm-operational-flow-manager-service.qa-crm.svc.cluster.local:31050/ofm/home/to-do
+
+vqm-todolist-view-all-task-url : http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/home/to-do
+
+mdm-get-eform-list-url: http://crm-meta-data-manager-service.qa-crm.svc.cluster.local:31020/mdm/meta-data/e-form
+mdm-get-eform-element-list-url: http://crm-meta-data-manager-service.qa-crm.svc.cluster.local:31020/mdm/meta-data/e-form/details
+ofm-enterprise-account-base-url: http://crm-operational-flow-manager-service.qa-crm.svc.cluster.local:31050/ofm/ecrm-account
+vqm-enterprise-account-base-url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/ecrm-account
+ofm-enterprise-contact-base-url: http://crm-operational-flow-manager-service.qa-crm.svc.cluster.local:31050/ofm/ecrm-contact
+vqm-enterprise-contact-base-url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/ecrm-contact
+
+
+ofm-ecrm-note-url : http://crm-operational-flow-manager-service.qa-crm.svc.cluster.local:31050/ofm/note
+
+ofm-ecrm-task-url : http://crm-operational-flow-manager-service.qa-crm.svc.cluster.local:31050/ofm/task
+
+vqm-view-task-url:   http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/task
+
+vqm-view-note-url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/note
+
+ofm-ecrm-call-url : http://crm-operational-flow-manager-service.qa-crm.svc.cluster.local:31050/ofm/call
+vqm-view-call-url : http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/call
+
+ofm-ecrm-meeting-url: http://crm-operational-flow-manager-service.qa-crm.svc.cluster.local:31050/ofm/meeting
+vqm-view-meeting-url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/meeting
+
+ofm-ecrm-email-url : http://crm-operational-flow-manager-service.qa-crm.svc.cluster.local:31050/ofm/email
+vqm-view-email-url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/email
+
+mdm-common-meta-data-url: http://crm-meta-data-manager-service.qa-crm.svc.cluster.local:31020/mdm/meta-data-manager
+
+ofm-attachment-base-url: http://crm-operational-flow-manager-service.qa-crm.svc.cluster.local:31050/ofm/attachment
+vqm-attachment-base-url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/attachment
+
+ofm-enterprise-lead-base-url: http://crm-operational-flow-manager-service.qa-crm.svc.cluster.local:31050/ofm/ecrm-lead
+vqm-enterprise-lead-base-url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/ecrm-lead
+
+ofm-enterprise-deal-base-url: http://crm-operational-flow-manager-service.qa-crm.svc.cluster.local:31050/ofm/ecrm-deal
+vqm-enterprise-deal-base-url: http://crm-view-query-manager-service-service.qa-crm.svc.cluster.local:31048/vqm/ecrm-deal
+
+cpq:
+  operational-flow:
+    base-url: http://cpq-operational-flow-mgt-service.cpq.svc.cluster.local:42002
+    createQuote: ${cpq.operational-flow.base-url}/cpq/operational-flow-mgt/quote/createQuote
+  query-mgt:
+    base-url: http://cpq-view-query-mgt-service.cpq.svc.cluster.local:42000
+    getQuoteList: ${cpq.query-mgt.base-url}/cpq/view-query-mgt/quote/getQuoteList
+    getPriceBookList: ${cpq.query-mgt.base-url}/cpq/view-query-mgt/priceBook/getPriceBookList

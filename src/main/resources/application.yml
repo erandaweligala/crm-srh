@@ -1,0 +1,306 @@
+#access:
+#  token-expire-time-millsec: 90000000
+#temp:
+#  token-expire-time-millsec: 90000000
+#jwt:
+#  idle:
+#    time:
+#      range:
+#        sec: 90000
+#  refresh:
+#    time:
+#      range:
+#        sec: 90000
+thread.count.dbapiexecutor: 50
+executor:
+  default:
+    timeout: 10000
+adaptor:
+  otp:
+    initiate: http://localhost:7007/adaptor/otp/initiate
+    validate: http://localhost:7007/adaptor/otp/validate
+otp:
+  initiate:
+    data:
+      allCapital: true
+      length: 8
+      transport: SMS
+      useLetter: true
+      useNumber: true
+      validityInSecond: 60
+rest-template:
+  connection-time-out: 60000
+  read-time-out: 60000
+  pool:
+    # Maximum total connections across all routes (increased from default 25)
+    max-total: 200
+    # Maximum connections per route (increased from default 5)
+    max-per-route: 50
+    # Validate connections that have been idle for more than 2 seconds
+    validate-after-inactivity: 2000
+    # Evict connections idle for more than 30 seconds
+    evict-idle-connections: 30
+    # Maximum lifetime of a connection in seconds (prevents stale connections)
+    connection-time-to-live: 60
+    # Socket timeout for reading data
+    socket-timeout: 60000
+secret-key: TempSecret
+self:
+  onboarding:
+    get:
+      customer:
+        vqm:
+          url: http://localhost:7003/vqm/self-onboarding/get-customer
+server:
+  http:
+    port: 7001
+  port: 7009
+spring:
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    timeout: 60000
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+  main:
+    allow-bean-definition-overriding: true
+ums:
+  get-attribute-details:
+    url: http://localhost:31020/ums/auth-user/attribute-info
+  get-activity-list: http://localhost:31020/ums/meta/action
+  get-user-names: http://localhost:31020/ums/meta/users
+  get-user-access-system: http://localhost:31020/ums/user/access/system
+  get-user-details: http://localhost:31020/ums/auth-user/get-user/
+  get-route-to-action: http://localhost:31020/ums/action-info
+  get-user-groups: http://localhost:31020/ums/group/get-group-by-user
+  user:
+    expired-in-days: 90
+    status:
+      meta-data: http://localhost:31020/ums/user/status/meta-data
+    base-resource-url: http://localhost:31020/ums/user
+    validate-email: http://localhost:31020/ums/user/validate
+  get-basic-info-for-token:
+    url: http://localhost:31020/ums/auth-user/basic-info/{userName}
+  cpq:
+    get-basic-info-for-token:
+      url: http://localhost:31020/ums/auth-user/basic-info/{userName}
+  get-user-details-for-username:
+    url: http://localhost:31020/ums/auth-user/external/user/{userName}
+  permission:
+    base-resource-url: http://localhost:31020/ums/permission
+  role:
+    base-resource-url: http://localhost:31020/ums/role
+    meta-data-url: http://localhost:31020/ums/role/meta-data
+  inactive:
+    days: 90
+  get-user-details-for-email:
+    url:  http://localhost:31020/ums/user/get-details-by-email/{email}
+  get-custom-properties:
+    url:  http://localhost:31020/ums/custom-properties
+  extension-management:
+    url: http://localhost:31020/ums/extension-management
+  routing-path:
+    url: http://localhost:31020/ums/extension-management/routing-paths
+  routing-path-crm-extension:
+    url: http://localhost:31020/ums/extension-management/routing-paths/crm-extension
+  get-user-name:
+    url: http://localhost:31020/ums/auth-user/get-username
+ofm:
+  trouble-ticket:
+    create:
+      url: http://localhost:7004/ofm/trouble-ticket/create-ticket
+    update:
+      url: http://localhost:7004/ofm/trouble-ticket/update-ticket/{ticketId}
+  mainprofile:
+    update:
+      url: http://localhost:7004/ofm/customer-profile
+
+vqm:
+  interaction:
+    timeline:
+      url:  http://localhost:7003/vqm/interaction
+  mainprofile:
+    account:
+      url: http://localhost:7003/vqm/customer-account/get-account-details-by-msisdn/{msisdn}
+    customerprofile:
+      url: http://localhost:7003/vqm/customer-profile/get-customer/{msisdn}
+    quota:
+      url: http://localhost:7003/vqm/quota/get-quota-info/{msisdn}
+  quota:
+    info:
+      url: http://localhost:7003/vqm/quota/get-quota-info/{msisdn}
+  selfonboarding:
+    accept:
+      customer:
+        url: http://localhost:7004/ofm/self-onboarding/accept-customer
+    getcustomers:
+      url: http://localhost:7003/vqm/self-onboarding/get-customer
+    reject:
+      customer:
+        url: http://localhost:7004/ofm/self-onboarding/reject-customer
+    get-customer-by-reference-id:
+      url: http://localhost:7003/vqm/self-onboarding/get-customer/{referenceId}
+  product:
+    details:
+      url: http://localhost:7003/vqm/product/get-product-details/{msisdn}
+  trouble-ticket:
+    view:
+       url: http://localhost:7003/vqm/trouble-ticket/get-tickets
+  connection-overview:
+    url: http://localhost:7003/vqm/connection-overview/get/{msisdn}
+  order-log:
+    get-order-steps-url: http://localhost:7003/vqm/order-log/order-steps/{orderId}/{orderitemId}
+    get-order-status-flow-url: http://localhost:7003/vqm/order-log/order-status-flow/{orderId}
+
+    details:
+      url: http://localhost:7003/vqm/order-log/get-order-log
+    step-details:
+      url: http://localhost:7003/vqm/order-log/get-order-steps
+  simpack:
+    get-all-url: http://localhost:7003/vqm/simpack/getAll
+    update-status-url: http://localhost:7003/vqm/simpack/updateValidity/{simPackId}/{status}
+    update-package-url: http://localhost:7003/vqm/simpack/update-package/{simPackId}/{packageId}
+  customer:
+    overview:
+#      url: https://run.mocky.io/v3/5a2e89c9-b1da-4315-94a7-a2b8515da84f
+      url: http://localhost:7003/vqm/customer-overview
+
+
+  orderlog:
+    get-order-steps-url: http://localhost:7003/vqm/order-log/order-steps/{orderId}/{orderitemId}
+    get-order-status-flow-url: http://localhost:7003/vqm/order-log/order-status-flow/{orderId}
+    get-all-url: http://localhost:7003/vqm/simpack/getAll
+    update-status-url: http://localhost:7003/vqm/simpack/updateValidity/{simPackId}/{status}
+    update-package-url: http://localhost:7003/vqm/simpack/update-package/{simPackId}/{status}
+
+tmf:
+  product-catalog:
+    product-offering:
+      retrieve-name-id-url: http://product-catalog-product-catalog-management-service-service.product-catalog.svc.cluster.local:31001/tmf-api/productCatalogManagement/v4/productOffering?fields=id,name&category.id=
+bss:
+  get-offering-display-info: http://localhost:7007/bss/catalog-management/get-catalog-package-display-info/{offeringId}
+  get-all-url: http://localhost:7003/vqm/simpack-validate/getAll
+  update-status-url: http://localhost:7003/vqm/simpack-validate/updateValidity/{simPackId}/{status}
+  orderlog:
+      get-order-steps-url: http://localhost:7003/vqm/order-log/order-steps/{orderId}/{orderitemId}
+      get-order-status-flow-url: http://localhost:7003/vqm/order-log/order-status-flow/{orderId}
+
+audit:
+  get-action-audits: http://localhost:8089/audit/get-action-log
+  send-audits: http://localhost:8089/audit/create-update-log
+  #get-action-audits: http://crm-audit-service-service.crm.svc.cluster.local:8089/audit/get-action-log
+
+
+rabbit:
+  exchange-name: audit.exchange
+  queue-name: audit.queue
+  routing-key: audit-routing-key
+  user-name: guest
+  user-password: guest
+  host-name: localhost
+  #user-name: admin
+  #user-password: adlrabbitmq
+  #host-name: abdb74d205ad54622a38dcdcb4bb1f47-2002768854.ap-southeast-1.elb.amazonaws.com
+  port: 5672
+
+tenant-id: 1
+
+
+
+
+#############Access Management Config###################################################################
+assisted-channel.secret-key: UM$CRMTemp$ecret1234567890!@#ExtraSecureKey
+access.token-expire-time-millsec: 12000000
+#refresh should done before #s before token exp time
+jwt.refresh.time.range.sec: 10
+#Time where access token remains in redis
+jwt.idle.time.range.sec: 3600
+#TTL of temp token
+temp.token.ttl.sec: 120
+prefix.ac: CRM_LOGGEDUSER_LOCAL_
+prefix.temp: CRM_TEMPTOKEN_LOCAL_
+
+base-url.context: /
+
+
+################## SAML responses #########################################################################
+login.success.url: http://localhost:3000/internal/success/
+login.fail.url: http://localhost:3000/internal/error/
+login.revoked.url: http://localhost:3000/internal/access-revoked/
+#saml.public-key-certificate.path: src/main/resources/crm-dev.cer
+saml.public-key-certificate.path: src/main/resources/axonect-ad-dev-raw.cer
+assistedChanel.ums.cred.url: http://localhost:31020/user-details/credentials/user/{userName}
+assistedChanel.ums.basic-info.url: http://localhost:31020/user-details/basic-info/user/{userName}
+saml.request.requestId.cache.time.sec: 120 #2min
+saml.request.redirection.url: https://login.microsoftonline.com/{tenantId}/saml2?SAMLRequest={uriEncode}
+#azure.ad.tenant-id: b1e2520e-d0f0-42e9-a703-33edced2b04f
+azure.ad.tenant-id: ca53df44-d921-4546-981d-d31b144244b2
+saml.request.issuer.url: http://localhost:7008/srh
+#saml.request.issuer.url: 26111bd9-98d5-4c63-883d-878dad0cdfd3
+cookie.max-age.sec: 604800
+
+
+vqm.ticket-summary.url: http://localhost:7003/vqm/home/ticket-summary
+
+vqm-customer-order-url : http://localhost:7003/vqm/customer-profile/order
+
+vqm-order-status-flow-url : http://localhost:7003/vqm/customer-profile/orders/order-status-flow/{orderId}
+
+vqm-order-status-url : http://localhost:7003/vqm/customer-profile/orders/order-steps/{orderId}/{itemId}
+
+ofm-todolist-create-task-url : http://localhost:7004/ofm/home/to-do
+
+ofm-todolist-update-task-url : http://localhost:7004/ofm/home/to-do
+
+ofm-todolist-delete-task-url : http://localhost:7004/ofm/home/to-do
+
+vqm-todolist-view-all-task-url : http://localhost:7003/vqm/home/to-do
+
+ofm-ecrm-note-url : http://localhost:7004/ofm/note
+vqm-view-note-url: http://localhost:7003/vqm/note
+
+ofm-ecrm-task-url : http://localhost:7004/ofm/task
+vqm-view-task-url: http://localhost:7003/vqm/task
+
+ofm-ecrm-call-url : http://localhost:7004/ofm/call
+vqm-view-call-url: http://localhost:7003/vqm/call
+
+ofm-ecrm-meeting-url : http://localhost:7004/ofm/meeting
+vqm-view-meeting-url: http://localhost:7003/vqm/meeting
+
+ofm-ecrm-email-url : http://localhost:7004/ofm/email
+vqm-view-email-url: http://localhost:7003/vqm/email
+
+mdm-get-eform-list-url: http://localhost:31056/mdm/meta-data/e-form
+mdm-get-eform-element-list-url: http://localhost:31056/mdm/meta-data/e-form/details
+ofm-enterprise-account-base-url: http://localhost:7004/ofm/ecrm-account
+vqm-enterprise-account-base-url: http://localhost:7003/vqm/ecrm-account
+ofm-enterprise-contact-base-url: http://localhost:7004/ofm/ecrm-contact
+vqm-enterprise-contact-base-url: http://localhost:7003/vqm/ecrm-contact
+mdm-common-meta-data-url: http://localhost:31056/mdm/meta-data-manager
+
+
+ofm-attachment-base-url: http://localhost:7004/ofm/attachment
+vqm-attachment-base-url: http://localhost:7003/vqm/attachment
+ofm-enterprise-lead-base-url: http://localhost:7004/ofm/ecrm-lead
+vqm-enterprise-lead-base-url: http://localhost:7003/vqm/ecrm-lead
+ofm-enterprise-deal-base-url: http://localhost:7004/ofm/ecrm-deal
+vqm-enterprise-deal-base-url: http://localhost:7003/vqm/ecrm-deal
+vqm-enterprise-product-url: http://localhost:7003/vqm/product
+vqm-enterprise-add-product-url: http://localhost:7003/ofm/addProducts
+#trigger#1
+
+cpq:
+  operational-flow:
+    base-url: http://cpq-operational-flow-mgt-service.cpq.svc.cluster.local:42002
+    createQuote: ${cpq.operational-flow.base-url}/cpq/operational-flow-mgt/quote/createQuote
+  query-mgt:
+    base-url: http://cpq-view-query-mgt-service.cpq.svc.cluster.local:42000
+    getQuoteList: ${cpq.query-mgt.base-url}/cpq/view-query-mgt/quote/getQuoteList
+    getPriceBookList: ${cpq.query-mgt.base-url}/cpq/view-query-mgt/priceBook/getPriceBookList
+
+
+
+
